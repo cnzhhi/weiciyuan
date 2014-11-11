@@ -9,18 +9,19 @@ import me.ivps.android.myweibo.bean.AccountBean;
 import me.ivps.android.myweibo.bean.UserBean;
 import me.ivps.android.myweibo.dao.URLHelper;
 import me.ivps.android.myweibo.dao.login.OAuthDao;
+import me.ivps.android.myweibo.dao.login.RefreshOAuthDao;
 import me.ivps.android.myweibo.support.database.AccountDBTask;
 import me.ivps.android.myweibo.support.debug.AppLogger;
 import me.ivps.android.myweibo.support.error.WeiboException;
 import me.ivps.android.myweibo.support.lib.MyAsyncTask;
 import me.ivps.android.myweibo.support.utils.Utility;
 import me.ivps.android.myweibo.ui.interfaces.AbstractAppActivity;
-
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,7 +30,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -47,22 +47,23 @@ public class OAuthActivity extends AbstractAppActivity {
     private WebView webView;
     private MenuItem refreshItem;
     
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.oauthactivity_layout);
+        
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(getString(R.string.login));
+        
         webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WeiboWebViewClient());
         
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setSaveFormData(false);
-        settings.setSavePassword(false);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         
         CookieSyncManager.createInstance(this);
         CookieManager cookieManager = CookieManager.getInstance();
@@ -100,15 +101,13 @@ public class OAuthActivity extends AbstractAppActivity {
         }
     }
     
+    @SuppressLint("InflateParams")
     public void refresh() {
-        webView.clearView();
         webView.loadUrl("about:blank");
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ImageView iv = (ImageView) inflater.inflate(
+        ImageView iv = (ImageView) LayoutInflater.from(this).inflate(
                 R.layout.refresh_action_view, null);
         
-        Animation rotation = AnimationUtils.loadAnimation(this, R.anim.refresh);
-        iv.startAnimation(rotation);
+        iv.startAnimation(AnimationUtils.loadAnimation(this, R.anim.refresh));
         
         refreshItem.setActionView(iv);
         webView.loadUrl(getWeiboOAuthUrl());
@@ -124,20 +123,18 @@ public class OAuthActivity extends AbstractAppActivity {
     private String getWeiboOAuthUrl() {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("client_id", URLHelper.APP_KEY);
-        parameters.put("response_type", "token");
         parameters.put("redirect_uri", URLHelper.DIRECT_URL);
         parameters.put("display", "mobile");
         return URLHelper.URL_OAUTH2_ACCESS_AUTHORIZE + "?"
                 + Utility.encodeUrl(parameters)
-                + "&scope=friendships_groups_read,friendships_groups_write";
+                + "&scope=friendships_groups_read";
     }
     
     private class WeiboWebViewClient extends WebViewClient {
         
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
-            return true;
+            return false;
         }
         
         @Override
@@ -171,15 +168,9 @@ public class OAuthActivity extends AbstractAppActivity {
         String error = values.getString("error");
         String error_code = values.getString("error_code");
         
-        Intent intent = new Intent();
-        intent.putExtras(values);
-        
         if (error == null && error_code == null) {
-            
-            String access_token = values.getString("access_token");
-            String expires_time = values.getString("expires_in");
-            setResult(RESULT_OK, intent);
-            new OAuthTask(this).execute(access_token, expires_time);
+            String code = values.getString("code");
+            new OAuthTask(this).execute(code);
         }
         else {
             Toast.makeText(OAuthActivity.this,
@@ -211,6 +202,8 @@ public class OAuthActivity extends AbstractAppActivity {
                 .newInstance();
         private WeakReference<OAuthActivity> oAuthActivityWeakReference;
         
+        private AccountBean account;
+        
         private OAuthTask(OAuthActivity activity) {
             oAuthActivityWeakReference = new WeakReference<OAuthActivity>(
                     activity);
@@ -227,18 +220,22 @@ public class OAuthActivity extends AbstractAppActivity {
         
         @Override
         protected DBResult doInBackground(String... params) {
-            String token = params[0];
-            long expiresInSeconds = Long.valueOf(params[1]);
+            String code = params[0];
             
             try {
-                UserBean user = new OAuthDao(token).getOAuthUserInfo();
-                AccountBean account = new AccountBean();
-                account.setAccess_token(token);
+                // 使用 code 刷新 access_token, expired_time 等
+                account = new RefreshOAuthDao(code).refreshToken();
+                
+                UserBean user = new OAuthDao(account.getAccess_token())
+                        .getOAuthUserInfo();
+                
                 account.setExpires_time(System.currentTimeMillis()
-                        + expiresInSeconds * 1000);
+                        + account.getExpires_time() * 1000L);
                 account.setInfo(user);
-                AppLogger.e("token expires in "
-                        + Utility.calcTokenExpiresInDays(account) + " days");
+                
+                AppLogger.d("token expires in "
+                        + Utility.calcTokenExpiresInDays(account) + " days.");
+                // 添加或更新授权账户
                 return AccountDBTask.addOrUpdateAccount(account, false);
             }
             catch (WeiboException e) {
@@ -290,6 +287,14 @@ public class OAuthActivity extends AbstractAppActivity {
                             Toast.LENGTH_SHORT).show();
                     break;
             }
+            
+            // 设置 bundle 数据
+            Intent intent = new Intent();
+            intent.putExtra("access_token", account.getAccess_token());
+            intent.putExtra(
+                    "expires_in",
+                    (account.getExpires_time() - System.currentTimeMillis()) / 1000L);
+            activity.setResult(Activity.RESULT_OK, intent);
             activity.finish();
         }
     }

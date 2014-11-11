@@ -17,7 +17,6 @@ import me.ivps.android.myweibo.support.utils.Utility;
 import me.ivps.android.myweibo.ui.blackmagic.BlackMagicActivity;
 import me.ivps.android.myweibo.ui.interfaces.AbstractAppActivity;
 import me.ivps.android.myweibo.ui.main.MainTimeLineActivity;
-
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
@@ -192,9 +191,8 @@ public class AccountActivity extends AbstractAppActivity implements
             if (data == null) {
                 return;
             }
-            String expires_time = data.getExtras().getString("expires_in");
-            long expiresDays = TimeUnit.SECONDS.toDays(Long
-                    .valueOf(expires_time));
+            long expires_time = data.getExtras().getLong("expires_in");
+            long expiresDays = TimeUnit.SECONDS.toDays(expires_time);
             
             String content = String.format(
                     getString(R.string.token_expires_in_time),
@@ -258,6 +256,7 @@ public class AccountActivity extends AbstractAppActivity implements
             forceLoad();
         }
         
+        @Override
         public List<AccountBean> loadInBackground() {
             return AccountDBTask.getAccountList();
         }
