@@ -1,16 +1,15 @@
 package org.qii.weiciyuan.support.utils;
 
 /**
- * User: qii
- * Date: 13-4-21
+ * User: qii Date: 13-4-21
  */
 public class BundleArgsConstants {
-    //listview fragment
+    // listview fragment
     public static final String SCROLL_TO_TOP = "scroll_to_top";
-
-    //friend timeline
+    
+    // friend timeline
     public static final String AUTO_REFRESH = "auto_refresh";
-
+    
     /**
      * new message broadcast arg
      */

@@ -9,16 +9,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 /**
- * User: qii
- * Date: 12-12-9
+ * User: qii Date: 12-12-9
  */
 @Deprecated
 public class TipDialog extends DialogFragment {
-
+    
     public TipDialog() {
-
+        
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -27,12 +26,12 @@ public class TipDialog extends DialogFragment {
                 .setPositiveButton(getString(R.string.confirm),
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
                                 dismissAllowingStateLoss();
                             }
                         });
-
+        
         return builder.create();
     }
 }
-

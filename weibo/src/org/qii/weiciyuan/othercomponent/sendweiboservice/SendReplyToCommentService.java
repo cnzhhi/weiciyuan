@@ -1,5 +1,10 @@
 package org.qii.weiciyuan.othercomponent.sendweiboservice;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.bean.AccountBean;
 import org.qii.weiciyuan.bean.CommentBean;
@@ -25,24 +30,18 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
 /**
- * User: qii
- * Date: 13-1-20
+ * User: qii Date: 13-1-20
  */
 public class SendReplyToCommentService extends Service {
-
+    
     private Map<WeiboSendTask, Boolean> tasksResult = new HashMap<WeiboSendTask, Boolean>();
     private Map<WeiboSendTask, Integer> tasksNotifications = new HashMap<WeiboSendTask, Integer>();
-
+    
     private Handler handler = new Handler();
-
-    public static Intent newIntent(AccountBean accountBean, CommentBean commentBean, String content,
-            String repostContent) {
+    
+    public static Intent newIntent(AccountBean accountBean,
+            CommentBean commentBean, String content, String repostContent) {
         Intent intent = new Intent(GlobalContext.getInstance(),
                 SendReplyToCommentService.class);
         intent.putExtra("oriMsg", commentBean);
@@ -54,60 +53,59 @@ public class SendReplyToCommentService extends Service {
         }
         return intent;
     }
-
+    
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
+    
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        
         int lastNotificationId = intent.getIntExtra("lastNotificationId", -1);
         if (lastNotificationId != -1) {
             NotificationUtility.cancel(lastNotificationId);
         }
-
+        
         String token = intent.getStringExtra("token");
-        AccountBean account = (AccountBean) intent.getParcelableExtra("account");
+        AccountBean account = (AccountBean) intent
+                .getParcelableExtra("account");
         String content = intent.getStringExtra("content");
         String repostContent = intent.getStringExtra("repostContent");
         CommentBean oriMsg = (CommentBean) intent.getParcelableExtra("oriMsg");
-
-        ReplyDraftBean replyDraftBean = (ReplyDraftBean) intent.getParcelableExtra("draft");
-
-        WeiboSendTask task = new WeiboSendTask(account, token, content, repostContent, oriMsg,
-                replyDraftBean);
+        
+        ReplyDraftBean replyDraftBean = (ReplyDraftBean) intent
+                .getParcelableExtra("draft");
+        
+        WeiboSendTask task = new WeiboSendTask(account, token, content,
+                repostContent, oriMsg, replyDraftBean);
         task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-
+        
         tasksResult.put(task, false);
-
+        
         return START_REDELIVER_INTENT;
     }
-
+    
     private class WeiboSendTask extends MyAsyncTask<Void, Long, Void> {
-
+        
         String token;
-
+        
         AccountBean account;
-
+        
         String content;
-
+        
         String repostContent;
-
+        
         CommentBean oriMsg;
-
+        
         ReplyDraftBean replyDraftBean;
-
+        
         Notification notification;
-
+        
         WeiboException e;
-
-        public WeiboSendTask(AccountBean account,
-                String token,
-                String content,
-                String repostContent,
-                CommentBean oriMsg,
+        
+        public WeiboSendTask(AccountBean account, String token, String content,
+                String repostContent, CommentBean oriMsg,
                 ReplyDraftBean replyDraftBean) {
             this.account = account;
             this.token = token;
@@ -116,35 +114,35 @@ public class SendReplyToCommentService extends Service {
             this.repostContent = repostContent;
             this.oriMsg = oriMsg;
         }
-
+        
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Notification.Builder builder = new Notification.Builder(SendReplyToCommentService.this)
+            Notification.Builder builder = new Notification.Builder(
+                    SendReplyToCommentService.this)
                     .setTicker(getString(R.string.sending_comment))
                     .setContentTitle(getString(R.string.sending_comment))
-                    .setContentText(content)
-                    .setOnlyAlertOnce(true)
-                    .setOngoing(true)
-                    .setSmallIcon(R.drawable.upload_white);
-
+                    .setContentText(content).setOnlyAlertOnce(true)
+                    .setOngoing(true).setSmallIcon(R.drawable.upload_white);
+            
             builder.setProgress(0, 100, true);
-
+            
             int notificationId = new Random().nextInt(Integer.MAX_VALUE);
-
+            
             notification = builder.getNotification();
-
+            
             NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                     .getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(notificationId, notification);
-
+            
             tasksNotifications.put(WeiboSendTask.this, notificationId);
         }
-
+        
         private void sendText() throws WeiboException {
-            ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, oriMsg, content);
+            ReplyToCommentMsgDao dao = new ReplyToCommentMsgDao(token, oriMsg,
+                    content);
             CommentBean commentBean = dao.reply();
-
+            
             if (!TextUtils.isEmpty(repostContent)) {
                 RepostNewMsgDao repostNewMsgDao = new RepostNewMsgDao(token,
                         oriMsg.getStatus().getId());
@@ -152,19 +150,20 @@ public class SendReplyToCommentService extends Service {
                 repostNewMsgDao.sendNewMsg();
             }
         }
-
+        
         @Override
         protected Void doInBackground(Void... params) {
             try {
                 sendText();
-            } catch (WeiboException e) {
+            }
+            catch (WeiboException e) {
                 this.e = e;
                 cancel(true);
             }
-
+            
             return null;
         }
-
+        
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -173,28 +172,27 @@ public class SendReplyToCommentService extends Service {
             }
             showSuccessfulNotification(WeiboSendTask.this);
         }
-
+        
         @Override
         protected void onCancelled(Void aVoid) {
             super.onCancelled(aVoid);
             showFailedNotification(WeiboSendTask.this);
         }
-
+        
         private void showSuccessfulNotification(final WeiboSendTask task) {
-            Notification.Builder builder = new Notification.Builder(SendReplyToCommentService.this)
+            Notification.Builder builder = new Notification.Builder(
+                    SendReplyToCommentService.this)
                     .setTicker(getString(R.string.send_successfully))
                     .setContentTitle(getString(R.string.send_successfully))
-                    .setOnlyAlertOnce(true)
-                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(true).setAutoCancel(true)
                     .setSmallIcon(R.drawable.send_successfully)
                     .setOngoing(false);
             Notification notification = builder.getNotification();
-            final NotificationManager notificationManager
-                    = (NotificationManager) getApplicationContext()
+            final NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                     .getSystemService(NOTIFICATION_SERVICE);
             final int id = tasksNotifications.get(task);
             notificationManager.notify(id, notification);
-
+            
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -202,40 +200,47 @@ public class SendReplyToCommentService extends Service {
                     stopServiceIfTasksAreEnd(task);
                 }
             }, 3000);
-
-            LocalBroadcastManager.getInstance(SendReplyToCommentService.this).sendBroadcast(
-                    new Intent(AppEventAction
-                            .buildSendCommentOrReplySuccessfullyAction(oriMsg.getStatus())));
+            
+            LocalBroadcastManager
+                    .getInstance(SendReplyToCommentService.this)
+                    .sendBroadcast(
+                            new Intent(
+                                    AppEventAction
+                                            .buildSendCommentOrReplySuccessfullyAction(oriMsg
+                                                    .getStatus())));
         }
-
+        
         private void showFailedNotification(final WeiboSendTask task) {
-            Notification.Builder builder = new Notification.Builder(SendReplyToCommentService.this)
+            Notification.Builder builder = new Notification.Builder(
+                    SendReplyToCommentService.this)
                     .setTicker(getString(R.string.send_failed))
-                    .setContentTitle(getString(R.string.send_faile_click_to_open))
-                    .setContentText(content)
-                    .setOnlyAlertOnce(true)
-                    .setAutoCancel(true)
-                    .setSmallIcon(R.drawable.send_failed)
+                    .setContentTitle(
+                            getString(R.string.send_faile_click_to_open))
+                    .setContentText(content).setOnlyAlertOnce(true)
+                    .setAutoCancel(true).setSmallIcon(R.drawable.send_failed)
                     .setOngoing(false);
-
-            Intent notifyIntent = WriteReplyToCommentActivity.startBecauseSendFailed(
-                    SendReplyToCommentService.this, account, content, oriMsg, replyDraftBean,
-                    repostContent, e.getError());
-
-            PendingIntent pendingIntent = PendingIntent
-                    .getActivity(SendReplyToCommentService.this, 0, notifyIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
-
+            
+            Intent notifyIntent = WriteReplyToCommentActivity
+                    .startBecauseSendFailed(SendReplyToCommentService.this,
+                            account, content, oriMsg, replyDraftBean,
+                            repostContent, e.getError());
+            
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    SendReplyToCommentService.this, 0, notifyIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            
             builder.setContentIntent(pendingIntent);
-
+            
             Notification notification;
             if (Utility.isJB()) {
-                Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(builder);
-                bigTextStyle.setBigContentTitle(getString(R.string.send_faile_click_to_open));
+                Notification.BigTextStyle bigTextStyle = new Notification.BigTextStyle(
+                        builder);
+                bigTextStyle
+                        .setBigContentTitle(getString(R.string.send_faile_click_to_open));
                 bigTextStyle.bigText(content);
                 bigTextStyle.setSummaryText(account.getUsernick());
                 builder.setStyle(bigTextStyle);
-
+                
                 Intent intent = new Intent(SendReplyToCommentService.this,
                         SendReplyToCommentService.class);
                 intent.putExtra("oriMsg", oriMsg);
@@ -243,23 +248,25 @@ public class SendReplyToCommentService extends Service {
                 intent.putExtra("token", token);
                 intent.putExtra("account", account);
                 intent.putExtra("repostContent", repostContent);
-
-                intent.putExtra("lastNotificationId", tasksNotifications.get(task));
-
-                PendingIntent retrySendIntent = PendingIntent
-                        .getService(SendReplyToCommentService.this, 0, intent,
-                                PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.addAction(R.drawable.send_light, getString(R.string.retry_send),
-                        retrySendIntent);
+                
+                intent.putExtra("lastNotificationId",
+                        tasksNotifications.get(task));
+                
+                PendingIntent retrySendIntent = PendingIntent.getService(
+                        SendReplyToCommentService.this, 0, intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.addAction(R.drawable.send_light,
+                        getString(R.string.retry_send), retrySendIntent);
                 notification = builder.build();
-            } else {
+            }
+            else {
                 notification = builder.getNotification();
             }
-
+            
             final int id = tasksNotifications.get(task);
-
+            
             NotificationUtility.show(notification, id);
-
+            
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -268,11 +275,11 @@ public class SendReplyToCommentService extends Service {
             }, 3000);
         }
     }
-
+    
     private void stopServiceIfTasksAreEnd(WeiboSendTask currentTask) {
-
+        
         tasksResult.put(currentTask, true);
-
+        
         boolean isAllTaskEnd = true;
         Set<WeiboSendTask> taskSet = tasksResult.keySet();
         for (WeiboSendTask task : taskSet) {
@@ -287,4 +294,3 @@ public class SendReplyToCommentService extends Service {
         }
     }
 }
-

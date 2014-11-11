@@ -9,43 +9,44 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 /**
- * User: qii
- * Date: 12-9-19
+ * User: qii Date: 12-9-19
  */
 public class BrowserCommentActivity extends AbstractAppActivity {
-
+    
     private String token;
-
+    
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("token", token);
     }
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
+        
         Intent intent = getIntent();
         CommentBean bean = (CommentBean) intent.getParcelableExtra("comment");
         token = intent.getStringExtra("token");
-
-        if (getFragmentManager().findFragmentByTag(BrowserCommentActivity.class.getName())
-                == null) {
-            getFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new BrowserCommentFragment(bean),
-                            BrowserCommentFragment.class.getName())
-                    .commit();
+        
+        if (getFragmentManager().findFragmentByTag(
+                BrowserCommentActivity.class.getName()) == null) {
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content,
+                            new BrowserCommentFragment(bean),
+                            BrowserCommentFragment.class.getName()).commit();
         }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent intent = MainTimeLineActivity.newIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
         }

@@ -10,28 +10,27 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 /**
- * User: qii
- * Date: 12-9-11
+ * User: qii Date: 12-9-11
  */
 public class RemoveDialog extends DialogFragment {
-
+    
     private int positon;
-
+    
     public RemoveDialog() {
-
+        
     }
-
+    
     public RemoveDialog(int positon) {
-
+        
         this.positon = positon;
     }
-
+    
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("positon", positon);
     }
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +38,7 @@ public class RemoveDialog extends DialogFragment {
             positon = savedInstanceState.getInt("position");
         }
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -47,9 +46,10 @@ public class RemoveDialog extends DialogFragment {
                 .setMessage(getString(R.string.askdeletemessage))
                 .setPositiveButton(getString(R.string.delete),
                         new DialogInterface.OnClickListener() {
-
+                            
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
                                 IRemoveItem iRemoveItem = (IRemoveItem) getTargetFragment();
                                 iRemoveItem.removeItem(positon);
                             }
@@ -57,12 +57,13 @@ public class RemoveDialog extends DialogFragment {
                 .setNegativeButton(getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
                                 IRemoveItem iRemoveItem = (IRemoveItem) getTargetFragment();
                                 iRemoveItem.removeCancel();
                             }
                         });
-
+        
         return builder.create();
     }
 }

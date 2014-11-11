@@ -397,4 +397,4 @@
 //        ViewGroup location_layout;
 //        ViewGroup blog_url_layout;
 //    }
-//}
+// }

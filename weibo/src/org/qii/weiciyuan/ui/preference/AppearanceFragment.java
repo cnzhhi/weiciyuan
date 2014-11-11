@@ -11,12 +11,11 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 /**
- * User: qii
- * Date: 12-10-4
+ * User: qii Date: 12-10-4
  */
-public class AppearanceFragment extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
-
+public class AppearanceFragment extends PreferenceFragment implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,16 +24,17 @@ public class AppearanceFragment extends PreferenceFragment
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .registerOnSharedPreferenceChangeListener(this);
     }
-
+    
     @Override
     public void onDetach() {
         super.onDetach();
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
-
+    
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+            String key) {
         if (key.equals(SettingActivity.LIST_AVATAR_MODE)) {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1")) {
@@ -44,10 +44,11 @@ public class AppearanceFragment extends PreferenceFragment
                 SettingUtility.setEnableBigAvatar(true);
             }
             if (value.equals("3")) {
-                SettingUtility.setEnableBigAvatar(Utility.isWifi(getActivity()));
+                SettingUtility
+                        .setEnableBigAvatar(Utility.isWifi(getActivity()));
             }
         }
-
+        
         if (key.equals(SettingActivity.LIST_PIC_MODE)) {
             String value = sharedPreferences.getString(key, "1");
             if (value.equals("1")) {

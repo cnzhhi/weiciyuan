@@ -1,9 +1,5 @@
 package org.qii.weiciyuan.support.crashmanager;
 
-import org.qii.weiciyuan.support.file.FileManager;
-
-import android.text.TextUtils;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
@@ -12,36 +8,41 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.qii.weiciyuan.support.file.FileManager;
+
+import android.text.TextUtils;
+
 /**
- * User: qii
- * Date: 13-3-21
+ * User: qii Date: 13-3-21
  */
 public class CrashManager {
-
+    
     private static final int MAX_LOG_FILES = 10;
-
+    
     public static void registerHandler() {
         Thread.UncaughtExceptionHandler currentHandler = Thread
                 .getDefaultUncaughtExceptionHandler();
-
+        
         // Register if not already registered
         if (!(currentHandler instanceof ExceptionHandler)) {
-            Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(currentHandler));
+            Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(
+                    currentHandler));
         }
-
+        
         ScheduledExecutorService scheduledExecutorService = Executors
                 .newSingleThreadScheduledExecutor();
-        scheduledExecutorService.schedule(new ClearLogTask(), 5, TimeUnit.SECONDS);
+        scheduledExecutorService.schedule(new ClearLogTask(), 5,
+                TimeUnit.SECONDS);
     }
-
+    
     private static class ClearLogTask implements Runnable {
-
+        
         @Override
         public void run() {
             onlyLeftTenLogFilesInStorage();
         }
     }
-
+    
     private static void onlyLeftTenLogFilesInStorage() {
         String[] files = searchForStackTraces();
         if (files == null) {
@@ -54,7 +55,7 @@ public class CrashManager {
             }
         }
     }
-
+    
     private static String[] searchForStackTraces() {
         String path = FileManager.getLogDir();
         if (TextUtils.isEmpty(path)) {
@@ -62,7 +63,7 @@ public class CrashManager {
         }
         // Try to create the files folder if it doesn't exist
         File dir = new File(path);
-
+        
         // Filter for ".stacktrace" files
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -73,7 +74,7 @@ public class CrashManager {
         for (int i = 0; i < files.length; i++) {
             files[i] = path + File.separator + files[i];
         }
-        //desc sort arrays, then delete the longest file
+        // desc sort arrays, then delete the longest file
         Arrays.sort(files, new Comparator<String>() {
             @Override
             public int compare(String aFilePath, String bFilePath) {

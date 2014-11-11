@@ -12,24 +12,23 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 /**
- * User: qii
- * Date: 13-2-15
+ * User: qii Date: 13-2-15
  */
 public class ModifyGroupDialog extends DialogFragment {
-
+    
     private EditText name;
     private String idstr;
     private String oriName;
-
+    
     public ModifyGroupDialog() {
-
+        
     }
-
+    
     public ModifyGroupDialog(String oriName, String idstr) {
         this.idstr = idstr;
         this.oriName = oriName;
     }
-
+    
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -37,7 +36,7 @@ public class ModifyGroupDialog extends DialogFragment {
         outState.putString("oriName", oriName);
         outState.putString("name", name.getText().toString());
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -55,14 +54,14 @@ public class ModifyGroupDialog extends DialogFragment {
                 .setTitle(getString(R.string.modify_group_name))
                 .setPositiveButton(getString(R.string.modify),
                         new DialogInterface.OnClickListener() {
-
+                            
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String name = ModifyGroupDialog.this.name.getText().toString()
-                                        .trim();
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                String name = ModifyGroupDialog.this.name
+                                        .getText().toString().trim();
                                 if (!TextUtils.isEmpty(name)) {
-                                    ManageGroupActivity.ManageGroupFragment fragment
-                                            = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
+                                    ManageGroupActivity.ManageGroupFragment fragment = (ManageGroupActivity.ManageGroupFragment) getTargetFragment();
                                     fragment.modifyGroupName(idstr, name);
                                 }
                             }
@@ -70,15 +69,15 @@ public class ModifyGroupDialog extends DialogFragment {
                 .setNegativeButton(getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                
                             }
                         });
-
+        
         AlertDialog dialog = builder.create();
-        dialog.getWindow()
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        dialog.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         return dialog;
     }
 }
-

@@ -9,19 +9,18 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 /**
- * User: qii
- * Date: 12-9-23
+ * User: qii Date: 12-9-23
  */
 public class ClearContentDialog extends DialogFragment {
-
+    
     public static interface IClear {
         public void clear();
     }
-
+    
     public ClearContentDialog() {
-
+        
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -29,20 +28,22 @@ public class ClearContentDialog extends DialogFragment {
                 .setMessage(getString(R.string.ask_clear))
                 .setPositiveButton(getString(R.string.clear),
                         new DialogInterface.OnClickListener() {
-
+                            
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
                                 ((IClear) getActivity()).clear();
                             }
                         })
                 .setNegativeButton(getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                
                             }
                         });
-
+        
         return builder.create();
     }
 }

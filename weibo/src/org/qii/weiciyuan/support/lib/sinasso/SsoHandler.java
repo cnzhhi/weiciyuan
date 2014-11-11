@@ -1,7 +1,13 @@
 package org.qii.weiciyuan.support.lib.sinasso;
 
+import org.qii.weiciyuan.dao.URLHelper;
+
 import android.app.Activity;
-import android.content.*;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -9,13 +15,11 @@ import android.content.pm.Signature;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
-import com.sina.sso.RemoteSSO;
-import org.qii.weiciyuan.dao.URLHelper;
 
+import com.sina.sso.RemoteSSO;
 
 /**
- * User: qii
- * Date: 13-6-18
+ * User: qii Date: 13-6-18
  */
 public class SsoHandler {
     private ServiceConnection conn = null;
@@ -38,22 +42,22 @@ public class SsoHandler {
             + "edbece9fd4d7ce9295cd83f5f19dc441a065689d9820faedbb7c4a4c4635f5ba1293f6da4b72ed3"
             + "2fb8795f736a20c95cda776402099054fccefb4a1a558664ab8d637288feceba9508aa907fc1fe2"
             + "b1ae5a0dec954ed831c0bea4";
-
+    
     private int mAuthActivityCode;
     private static String ssoPackageName = "";// "com.sina.weibo";
     private static String ssoActivityName = "";// "com.sina.weibo.MainTabActivity";
     private Activity mAuthActivity;
-    private String[] authPermissions = {"friendships_groups_read", "friendships_groups_write"};
-
-
+    private String[] authPermissions = { "friendships_groups_read",
+            "friendships_groups_write" };
+    
     public SsoHandler(Activity activity) {
         mAuthActivity = activity;
         conn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
+                
             }
-
+            
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 RemoteSSO remoteSSOservice = RemoteSSO.Stub
@@ -62,73 +66,73 @@ public class SsoHandler {
                     ssoPackageName = remoteSSOservice.getPackageName();
                     ssoActivityName = remoteSSOservice.getActivityName();
                     boolean singleSignOnStarted = startSingleSignOn(
-                            mAuthActivity, authPermissions,
-                            mAuthActivityCode);
-
-                } catch (RemoteException e) {
+                            mAuthActivity, authPermissions, mAuthActivityCode);
+                    
+                }
+                catch (RemoteException e) {
                     e.printStackTrace();
                 }
-
+                
             }
         };
     }
-
-
+    
     public void authorize() {
         authorize(DEFAULT_AUTH_ACTIVITY_CODE);
     }
-
-    private void authorize(
-            int activityCode) {
+    
+    private void authorize(int activityCode) {
         mAuthActivityCode = activityCode;
-
+        
         boolean bindSucced = false;
-
+        
         // Prefer single sign-on, where available.
         bindSucced = bindRemoteSSOService(mAuthActivity);
-
+        
     }
-
+    
     private boolean bindRemoteSSOService(Activity activity) {
         Context context = activity.getApplicationContext();
         Intent intent = new Intent("com.sina.weibo.remotessoservice");
         return context.bindService(intent, conn, Context.BIND_AUTO_CREATE);
     }
-
-    private boolean startSingleSignOn(Activity activity, String[] permissions, int activityCode) {
+    
+    private boolean startSingleSignOn(Activity activity, String[] permissions,
+            int activityCode) {
         boolean didSucceed = true;
         Intent intent = new Intent();
         intent.setClassName(ssoPackageName, ssoActivityName);
         intent.putExtra("appKey", URLHelper.APP_KEY);
         intent.putExtra("redirectUri", URLHelper.DIRECT_URL);
-
+        
         if (permissions.length > 0) {
             intent.putExtra("scope", TextUtils.join(",", permissions));
         }
-
+        
         // validate Signature
         if (!validateAppSignatureForIntent(activity, intent)) {
             return false;
         }
-
+        
         try {
             activity.startActivityForResult(intent, activityCode);
-        } catch (ActivityNotFoundException e) {
+        }
+        catch (ActivityNotFoundException e) {
             didSucceed = false;
         }
-
+        
         activity.getApplication().unbindService(conn);
         return didSucceed;
     }
-
+    
     private boolean validateAppSignatureForIntent(Activity activity,
-                                                  Intent intent) {
+            Intent intent) {
         ResolveInfo resolveInfo = activity.getPackageManager().resolveActivity(
                 intent, 0);
         if (resolveInfo == null) {
             return false;
         }
-
+        
         String packageName = resolveInfo.activityInfo.packageName;
         try {
             PackageInfo packageInfo = activity.getPackageManager()
@@ -138,12 +142,12 @@ public class SsoHandler {
                     return true;
                 }
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        }
+        catch (PackageManager.NameNotFoundException e) {
             return false;
         }
-
+        
         return false;
     }
-
-
+    
 }

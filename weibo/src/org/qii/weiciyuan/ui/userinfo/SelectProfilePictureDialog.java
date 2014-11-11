@@ -9,18 +9,18 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 /**
- * User: qii
- * Date: 13-3-2
+ * User: qii Date: 13-3-2
  */
 public class SelectProfilePictureDialog extends DialogFragment {
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String[] items = {getString(R.string.take_camera), getString(R.string.select_pic)};
-
+        String[] items = { getString(R.string.take_camera),
+                getString(R.string.select_pic) };
+        
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.select))
-                .setItems(items, (DialogInterface.OnClickListener) getActivity());
+                .setTitle(getString(R.string.select)).setItems(items,
+                        (DialogInterface.OnClickListener) getActivity());
         return builder.create();
     }
 }

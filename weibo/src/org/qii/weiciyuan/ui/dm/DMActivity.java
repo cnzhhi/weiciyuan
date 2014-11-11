@@ -9,54 +9,57 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 /**
- * User: qii
- * Date: 12-11-10
+ * User: qii Date: 12-11-10
  */
 public class DMActivity extends AbstractAppActivity {
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
+        
         UserBean bean = (UserBean) getIntent().getParcelableExtra("user");
-
+        
         setTitle(bean.getScreen_name());
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, DMConversationListFragment.newInstance(bean),
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content,
+                            DMConversationListFragment.newInstance(bean),
                             DMConversationListFragment.class.getName())
                     .commit();
         }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 intent = MainTimeLineActivity.newIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
         }
         return false;
     }
-
+    
     @Override
     public void onBackPressed() {
-        DMConversationListFragment fragment
-                = (DMConversationListFragment) getSupportFragmentManager()
+        DMConversationListFragment fragment = (DMConversationListFragment) getSupportFragmentManager()
                 .findFragmentByTag(DMConversationListFragment.class.getName());
         if (fragment != null) {
             if (!fragment.isSmileyPanelClosed()) {
                 fragment.closeSmileyPanel();
-            } else {
+            }
+            else {
                 super.onBackPressed();
             }
-        } else {
+        }
+        else {
             super.onBackPressed();
         }
     }

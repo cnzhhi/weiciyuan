@@ -10,22 +10,21 @@ import android.os.Handler;
 import android.os.Looper;
 
 /**
- * User: Jiang Qi
- * Date: 12-8-6
+ * User: Jiang Qi Date: 12-8-6
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
-
+    
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable task = null;
-
-    //receive multi broadcasts at the same time
+    
+    // receive multi broadcasts at the same time
     @Override
     public void onReceive(final Context context, Intent intent) {
-
+        
         if (task != null) {
             handler.removeCallbacks(task);
         }
-
+        
         task = new Runnable() {
             @Override
             public void run() {
@@ -33,29 +32,31 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                 task = null;
             }
         };
-
+        
         handler.postDelayed(task, 2000);
     }
-
+    
     public static void judgeNetworkStatus(Context context,
             boolean forceStartFetchNewUnreadBackgroundService) {
         if (Utility.isConnected(context)) {
-
+            
             if (forceStartFetchNewUnreadBackgroundService) {
                 if (SettingUtility.getEnableFetchMSG()) {
                     AppNewMsgAlarm.startAlarm(context, true);
-                } else {
+                }
+                else {
                     AppNewMsgAlarm.stopAlarm(context, false);
                 }
             }
-
+            
             decideTimeLineBigPic(context);
             decideCommentRepostAvatar(context);
-        } else {
+        }
+        else {
             AppNewMsgAlarm.stopAlarm(context, false);
         }
     }
-
+    
     private static void decideTimeLineBigPic(Context context) {
         if (SettingUtility.getListAvatarMode() == 3) {
             SettingUtility.setEnableBigAvatar(Utility.isWifi(context));
@@ -64,10 +65,11 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             SettingUtility.setEnableBigPic(Utility.isWifi(context));
         }
     }
-
+    
     private static void decideCommentRepostAvatar(Context context) {
         if (SettingUtility.getCommentRepostAvatar() == 3) {
-            SettingUtility.setEnableCommentRepostAvatar(Utility.isWifi(context));
+            SettingUtility
+                    .setEnableCommentRepostAvatar(Utility.isWifi(context));
         }
     }
 }

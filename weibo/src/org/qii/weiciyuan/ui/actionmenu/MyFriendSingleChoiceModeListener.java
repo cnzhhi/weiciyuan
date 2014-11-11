@@ -23,8 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 /**
- * User: qii
- * Date: 12-10-11
+ * User: qii Date: 12-10-11
  */
 public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
     private ListView listView;
@@ -32,40 +31,40 @@ public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
     private Fragment fragment;
     private ActionMode mode;
     private UserBean bean;
-
+    
     private UnFollowTask unfollowTask;
-
+    
     public void finish() {
         if (mode != null) {
             mode.finish();
         }
-
+        
         if (unfollowTask != null) {
             unfollowTask.cancel(true);
         }
     }
-
-    public MyFriendSingleChoiceModeListener(ListView listView, UserListAdapter adapter,
-            Fragment fragment, UserBean bean) {
+    
+    public MyFriendSingleChoiceModeListener(ListView listView,
+            UserListAdapter adapter, Fragment fragment, UserBean bean) {
         this.listView = listView;
         this.fragment = fragment;
         this.adapter = adapter;
         this.bean = bean;
     }
-
+    
     private Activity getActivity() {
         return fragment.getActivity();
     }
-
+    
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         if (this.mode == null) {
             this.mode = mode;
         }
-
+        
         return true;
     }
-
+    
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
@@ -74,15 +73,18 @@ public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
         mode.setTitle(bean.getScreen_name());
         return true;
     }
-
+    
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_at:
-                Intent intent = new Intent(getActivity(), WriteWeiboActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                Intent intent = new Intent(getActivity(),
+                        WriteWeiboActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance()
+                        .getSpecialToken());
                 intent.putExtra("content", "@" + bean.getScreen_name());
-                intent.putExtra("account", GlobalContext.getInstance().getAccountBean());
+                intent.putExtra("account", GlobalContext.getInstance()
+                        .getAccountBean());
                 getActivity().startActivity(intent);
                 listView.clearChoices();
                 mode.finish();
@@ -91,7 +93,8 @@ public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
                 if (unfollowTask == null
                         || unfollowTask.getStatus() == MyAsyncTask.Status.FINISHED) {
                     unfollowTask = new UnFollowTask();
-                    unfollowTask.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
+                    unfollowTask
+                            .executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 }
                 listView.clearChoices();
                 mode.finish();
@@ -99,7 +102,7 @@ public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
         }
         return true;
     }
-
+    
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         this.mode = null;
@@ -107,43 +110,47 @@ public class MyFriendSingleChoiceModeListener implements ActionMode.Callback {
         adapter.notifyDataSetChanged();
         ((AbstractUserListFragment) fragment).setmActionMode(null);
     }
-
+    
     private class UnFollowTask extends MyAsyncTask<Void, UserBean, UserBean> {
         WeiboException e;
-
+        
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
-
+        
         @Override
         protected UserBean doInBackground(Void... params) {
-            FriendshipsDao dao = new FriendshipsDao(GlobalContext.getInstance().getSpecialToken());
+            FriendshipsDao dao = new FriendshipsDao(GlobalContext.getInstance()
+                    .getSpecialToken());
             if (!TextUtils.isEmpty(bean.getId())) {
                 dao.setUid(bean.getId());
-            } else {
+            }
+            else {
                 dao.setScreen_name(bean.getScreen_name());
             }
-
+            
             try {
                 return dao.unFollowIt();
-            } catch (WeiboException e) {
+            }
+            catch (WeiboException e) {
                 AppLogger.e(e.getError());
                 this.e = e;
                 cancel(true);
                 return null;
             }
         }
-
+        
         @Override
         protected void onCancelled(UserBean userBean) {
             super.onCancelled(userBean);
         }
-
+        
         @Override
         protected void onPostExecute(UserBean o) {
             super.onPostExecute(o);
-            Toast.makeText(getActivity(), getActivity().getString(R.string.unfollow_successfully),
+            Toast.makeText(getActivity(),
+                    getActivity().getString(R.string.unfollow_successfully),
                     Toast.LENGTH_SHORT).show();
             adapter.removeItem(bean);
         }

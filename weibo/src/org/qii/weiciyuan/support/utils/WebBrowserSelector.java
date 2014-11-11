@@ -9,19 +9,20 @@ import android.net.Uri;
 import android.provider.Browser;
 
 /**
- * User: qii
- * Date: 13-9-17
+ * User: qii Date: 13-9-17
  */
 public class WebBrowserSelector {
-
+    
     public static void openLink(Context context, Uri uri) {
         if (SettingUtility.allowInternalWebBrowser()) {
             Intent intent = new Intent(context, BrowserWebActivity.class);
             intent.putExtra("url", uri.toString());
             context.startActivity(intent);
-        } else {
+        }
+        else {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID,
+                    context.getPackageName());
             context.startActivity(intent);
         }
     }

@@ -15,43 +15,44 @@
  *******************************************************************************/
 package uk.co.senab.photoview.gestures;
 
+import uk.co.senab.photoview.Compat;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.view.MotionEvent;
 
-import uk.co.senab.photoview.Compat;
-
 @TargetApi(5)
 public class EclairGestureDetector extends CupcakeGestureDetector {
-
+    
     private static final int INVALID_POINTER_ID = -1;
-
+    
     private int mActivePointerId = INVALID_POINTER_ID;
-
+    
     private int mActivePointerIndex = 0;
-
+    
     public EclairGestureDetector(Context context) {
         super(context);
     }
-
+    
     @Override
     float getActiveX(MotionEvent ev) {
         try {
             return ev.getX(mActivePointerIndex);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return ev.getX();
         }
     }
-
+    
     @Override
     float getActiveY(MotionEvent ev) {
         try {
             return ev.getY(mActivePointerIndex);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return ev.getY();
         }
     }
-
+    
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         final int action = ev.getAction();
@@ -79,7 +80,7 @@ public class EclairGestureDetector extends CupcakeGestureDetector {
                 }
                 break;
         }
-
+        
         mActivePointerIndex = ev
                 .findPointerIndex(mActivePointerId != INVALID_POINTER_ID ? mActivePointerId
                         : 0);

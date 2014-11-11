@@ -13,11 +13,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 /**
- * User: qii
- * Date: 12-10-22
+ * User: qii Date: 12-10-22
  */
 public class ModifyFilterDialog extends DialogFragment {
-
+    
     public static ModifyFilterDialog newInstance(String word) {
         ModifyFilterDialog modifyFilterDialog = new ModifyFilterDialog();
         Bundle bundle = new Bundle();
@@ -25,7 +24,7 @@ public class ModifyFilterDialog extends DialogFragment {
         modifyFilterDialog.setArguments(bundle);
         return modifyFilterDialog;
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final String word = getArguments().getString("word");
@@ -37,13 +36,14 @@ public class ModifyFilterDialog extends DialogFragment {
                 .setTitle(getString(R.string.modify_filter_word))
                 .setPositiveButton(getString(R.string.modify),
                         new DialogInterface.OnClickListener() {
-
+                            
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String newValue = et.getText().toString().trim();
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                String newValue = et.getText().toString()
+                                        .trim();
                                 if (!TextUtils.isEmpty(word)) {
-                                    AbstractFilterFragment filterFragment
-                                            = (AbstractFilterFragment) getTargetFragment();
+                                    AbstractFilterFragment filterFragment = (AbstractFilterFragment) getTargetFragment();
                                     filterFragment.modifyFilter(word, newValue);
                                 }
                             }
@@ -51,15 +51,15 @@ public class ModifyFilterDialog extends DialogFragment {
                 .setNegativeButton(getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                
                             }
                         });
-
+        
         AlertDialog dialog = builder.create();
-        dialog.getWindow()
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        dialog.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         return dialog;
     }
 }
-

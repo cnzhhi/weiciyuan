@@ -10,11 +10,10 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 /**
- * User: qii
- * Date: 12-9-8
+ * User: qii Date: 12-9-8
  */
 public class SearchTopicByNameActivity extends AbstractAppActivity {
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,18 +28,20 @@ public class SearchTopicByNameActivity extends AbstractAppActivity {
         getActionBar().setDisplayShowHomeEnabled(false);
         getActionBar().setTitle("#" + q + "#");
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new SearchTopicByNameFragment(q))
-                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(android.R.id.content,
+                            new SearchTopicByNameFragment(q)).commit();
         }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent intent = MainTimeLineActivity.newIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
         }

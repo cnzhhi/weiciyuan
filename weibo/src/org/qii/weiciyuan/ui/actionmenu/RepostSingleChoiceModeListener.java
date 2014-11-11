@@ -11,20 +11,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 /**
- * User: qii
- * Date: 12-9-9
+ * User: qii Date: 12-9-9
  */
-public class RepostSingleChoiceModeListener extends StatusSingleChoiceModeListener {
+public class RepostSingleChoiceModeListener extends
+        StatusSingleChoiceModeListener {
     private LinearLayout quick_repost;
     private int initState;
-
-    public RepostSingleChoiceModeListener(ListView listView, StatusListAdapter adapter,
-            Fragment activity, LinearLayout quick_repost, MessageBean bean) {
+    
+    public RepostSingleChoiceModeListener(ListView listView,
+            StatusListAdapter adapter, Fragment activity,
+            LinearLayout quick_repost, MessageBean bean) {
         super(listView, adapter, activity, bean);
         this.quick_repost = quick_repost;
         initState = this.quick_repost.getVisibility();
     }
-
+    
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         if (initState == View.VISIBLE) {
@@ -32,7 +33,7 @@ public class RepostSingleChoiceModeListener extends StatusSingleChoiceModeListen
         }
         return super.onCreateActionMode(mode, menu);
     }
-
+    
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         if (initState == View.VISIBLE) {

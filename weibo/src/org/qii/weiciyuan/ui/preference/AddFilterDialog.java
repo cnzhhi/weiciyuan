@@ -13,48 +13,49 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 /**
- * User: qii
- * Date: 12-9-21
+ * User: qii Date: 12-9-21
  */
 public class AddFilterDialog extends DialogFragment {
-
+    
     public static AddFilterDialog newInstance() {
         return new AddFilterDialog();
     }
-
+    
     public AddFilterDialog() {
-
+        
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText et = new EditText(getActivity());
         builder.setView(et)
                 .setTitle(getString(R.string.input_filter_word))
-                .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String word = et.getText().toString().trim();
-                        if (!TextUtils.isEmpty(word)) {
-                            AbstractFilterFragment filterFragment
-                                    = (AbstractFilterFragment) getTargetFragment();
-                            filterFragment.addFilter(word);
-                        }
-                    }
-                })
+                .setPositiveButton(getString(R.string.add),
+                        new DialogInterface.OnClickListener() {
+                            
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                String word = et.getText().toString().trim();
+                                if (!TextUtils.isEmpty(word)) {
+                                    AbstractFilterFragment filterFragment = (AbstractFilterFragment) getTargetFragment();
+                                    filterFragment.addFilter(word);
+                                }
+                            }
+                        })
                 .setNegativeButton(getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                
                             }
                         });
-
+        
         AlertDialog dialog = builder.create();
-        dialog.getWindow()
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        dialog.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         return dialog;
     }
 }

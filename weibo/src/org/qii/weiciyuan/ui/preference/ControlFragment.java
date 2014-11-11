@@ -10,36 +10,34 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 /**
- * User: qii
- * Date: 12-10-19
+ * User: qii Date: 12-10-19
  */
-public class ControlFragment extends PreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
-
+public class ControlFragment extends PreferenceFragment implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(false);
         addPreferencesFromResource(R.xml.control_pref);
         PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .registerOnSharedPreferenceChangeListener(
-                        this);
+                .registerOnSharedPreferenceChangeListener(this);
     }
-
+    
     @Override
     public void onDetach() {
         super.onDetach();
         PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .unregisterOnSharedPreferenceChangeListener(
-                        this);
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
-
+    
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+            String key) {
         if (key.equals(SettingActivity.DISABLE_DOWNLOAD_AVATAR_PIC)) {
-
+            
         }
-
+        
         if (key.equals(SettingActivity.COMMENT_REPOST_AVATAR)) {
             switch (SettingUtility.getCommentRepostAvatar()) {
                 case 1:
@@ -49,7 +47,8 @@ public class ControlFragment extends PreferenceFragment
                     SettingUtility.setEnableCommentRepostAvatar(false);
                     break;
                 case 3:
-                    SettingUtility.setEnableCommentRepostAvatar(Utility.isWifi(getActivity()));
+                    SettingUtility.setEnableCommentRepostAvatar(Utility
+                            .isWifi(getActivity()));
                     break;
             }
         }

@@ -12,20 +12,21 @@ import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 
 /**
- * User: qii
- * Date: 13-5-11
+ * User: qii Date: 13-5-11
  */
 public class SearchTimeLinePagerAdapter extends AppFragmentPagerAdapter {
-
+    
     private SparseArray<Fragment> fragmentList;
-
-    public SearchTimeLinePagerAdapter(SearchMainParentFragment fragment, ViewPager viewPager,
-            FragmentManager fm, MainTimeLineActivity activity, SparseArray<Fragment> fragmentList) {
+    
+    public SearchTimeLinePagerAdapter(SearchMainParentFragment fragment,
+            ViewPager viewPager, FragmentManager fm,
+            MainTimeLineActivity activity, SparseArray<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
         fragmentList.append(0, fragment.getSearchWeiboFragment());
         fragmentList.append(1, fragment.getSearchUserFragment());
-        FragmentTransaction transaction = fragment.getChildFragmentManager().beginTransaction();
+        FragmentTransaction transaction = fragment.getChildFragmentManager()
+                .beginTransaction();
         if (!fragmentList.get(0).isAdded()) {
             transaction.add(viewPager.getId(), fragmentList.get(0),
                     SearchStatusFragment.class.getName());
@@ -39,20 +40,20 @@ public class SearchTimeLinePagerAdapter extends AppFragmentPagerAdapter {
             fragment.getChildFragmentManager().executePendingTransactions();
         }
     }
-
+    
     public Fragment getItem(int position) {
         return fragmentList.get(position);
     }
-
+    
     @Override
     protected String getTag(int position) {
         SparseArray<String> tagList = new SparseArray<String>();
         tagList.append(0, MentionsWeiboTimeLineFragment.class.getName());
         tagList.append(0, MentionsCommentTimeLineFragment.class.getName());
-
+        
         return tagList.get(position);
     }
-
+    
     @Override
     public int getCount() {
         return 2;

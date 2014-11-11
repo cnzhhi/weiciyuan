@@ -6,13 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 /**
- * User: qii
- * Date: 14-6-10
+ * User: qii Date: 14-6-10
  */
-public abstract class AbstractWorker<Params, Progress, Result>
-        extends MyAsyncTask<Params, Progress, Result>
-        implements IPictureWorker {
-
+public abstract class AbstractWorker<Params, Progress, Result> extends
+        MyAsyncTask<Params, Progress, Result> implements IPictureWorker {
+    
     protected boolean isMySelf(ImageView view) {
         if (view != null) {
             IPictureWorker bitmapDownloaderTask = getBitmapDownloaderTask(view);
@@ -22,7 +20,7 @@ public abstract class AbstractWorker<Params, Progress, Result>
         }
         return false;
     }
-
+    
     private IPictureWorker getBitmapDownloaderTask(ImageView imageView) {
         if (imageView != null) {
             Drawable drawable = imageView.getDrawable();

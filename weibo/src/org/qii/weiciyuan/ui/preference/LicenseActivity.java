@@ -16,13 +16,12 @@ import android.view.WindowManager;
 import android.webkit.WebView;
 
 /**
- * User: qii
- * Date: 13-4-18
+ * User: qii Date: 13-4-18
  */
 public class LicenseActivity extends AbstractAppActivity {
-
+    
     private WebView webView;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +37,10 @@ public class LicenseActivity extends AbstractAppActivity {
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(getString(R.string.pref_open_source_license_title));
-        } else {
+            actionBar
+                    .setTitle(getString(R.string.pref_open_source_license_title));
+        }
+        else {
             setTitle(getString(R.string.pref_open_source_license_title));
         }
         webView = new WebView(this);
@@ -52,38 +53,43 @@ public class LicenseActivity extends AbstractAppActivity {
         }
         webView.loadUrl("file:///android_asset/licenses.html");
     }
-
+    
     @Override
     public void onBackPressed() {
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
-        } else {
+        }
+        else {
             super.onBackPressed();
         }
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (Utility.isKK()) {
-            getMenuInflater().inflate(R.menu.actionbar_menu_licenseactivity, menu);
+            getMenuInflater().inflate(R.menu.actionbar_menu_licenseactivity,
+                    menu);
             return true;
-        } else {
+        }
+        else {
             return super.onCreateOptionsMenu(menu);
         }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
             case android.R.id.home:
                 intent = new Intent(this, AboutActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
             case R.id.menu_print:
                 PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
-                PrintDocumentAdapter adapter = webView.createPrintDocumentAdapter();
+                PrintDocumentAdapter adapter = webView
+                        .createPrintDocumentAdapter();
                 printManager.print(getString(R.string.app_name), adapter, null);
                 return true;
         }

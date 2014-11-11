@@ -9,20 +9,22 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * User: qii
- * Date: 13-2-26
+ * User: qii Date: 13-2-26
  */
-public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+public class SwipeRightToCloseOnGestureListener extends
+        GestureDetector.SimpleOnGestureListener {
     private ViewPager viewPager;
     protected MotionEvent mLastOnDownEvent = null;
     private float[] firstPosition = new float[2];
     private View topView;
-
-    public SwipeRightToCloseOnGestureListener(Activity activity, ViewPager viewPager) {
+    
+    public SwipeRightToCloseOnGestureListener(Activity activity,
+            ViewPager viewPager) {
         this.viewPager = viewPager;
-        this.topView = ((View) (activity.findViewById(android.R.id.content).getParent()));
+        this.topView = ((View) (activity.findViewById(android.R.id.content)
+                .getParent()));
     }
-
+    
     @Override
     public boolean onDown(MotionEvent e) {
         mLastOnDownEvent = e;
@@ -30,15 +32,17 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
         firstPosition[1] = e.getRawY();
         return true;
     }
-
+    
     @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+            float distanceY) {
         if (e2.getRawX() < firstPosition[0]) {
             float y = this.topView.getTranslationX();
             if (y != 0f) {
                 this.topView.setTranslationX(0);
                 return super.onScroll(e1, e2, distanceX, distanceY);
-            } else {
+            }
+            else {
                 return false;
             }
         }
@@ -48,7 +52,8 @@ public class SwipeRightToCloseOnGestureListener extends GestureDetector.SimpleOn
                 && firstPosition[0] <= MAX_MOTION_EVENT_DOWN__X_POSITION) {
             this.topView.setTranslationX(s);
             return super.onScroll(e1, e2, distanceX, distanceY);
-        } else {
+        }
+        else {
             return false;
         }
     }

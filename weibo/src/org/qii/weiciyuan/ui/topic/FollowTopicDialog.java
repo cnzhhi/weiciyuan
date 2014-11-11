@@ -12,19 +12,18 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 /**
- * User: qii
- * Date: 12-11-26
+ * User: qii Date: 12-11-26
  */
 public class FollowTopicDialog extends DialogFragment {
-
+    
     public static FollowTopicDialog newInstance() {
         return new FollowTopicDialog();
     }
-
+    
     public FollowTopicDialog() {
-
+        
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -32,29 +31,31 @@ public class FollowTopicDialog extends DialogFragment {
         et.setHint(getString(R.string.add_topic_hint));
         builder.setView(et)
                 .setTitle(getString(R.string.add_topic))
-                .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String word = et.getText().toString().trim();
-                        if (!TextUtils.isEmpty(word)) {
-                            UserTopicListFragment userTopicListFragment
-                                    = (UserTopicListFragment) getTargetFragment();
-                            userTopicListFragment.addTopic(word);
-                        }
-                    }
-                })
+                .setPositiveButton(getString(R.string.add),
+                        new DialogInterface.OnClickListener() {
+                            
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                String word = et.getText().toString().trim();
+                                if (!TextUtils.isEmpty(word)) {
+                                    UserTopicListFragment userTopicListFragment = (UserTopicListFragment) getTargetFragment();
+                                    userTopicListFragment.addTopic(word);
+                                }
+                            }
+                        })
                 .setNegativeButton(getString(R.string.cancel),
                         new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                
                             }
                         });
-
+        
         AlertDialog dialog = builder.create();
-        dialog.getWindow()
-                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        dialog.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         return dialog;
     }
 }

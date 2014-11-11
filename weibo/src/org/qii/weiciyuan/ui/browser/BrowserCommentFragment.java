@@ -29,33 +29,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * User: qii
- * Date: 12-9-19
+ * User: qii Date: 12-9-19
  */
 public class BrowserCommentFragment extends Fragment {
-
+    
     private CommentBean msg;
-
+    
     private TextView username;
     private TextView content;
     private TextView time;
     private TextView source;
     private ImageView avatar;
     private ShareActionProvider mShareActionProvider;
-
+    
     public BrowserCommentFragment() {
     }
-
+    
     public BrowserCommentFragment(CommentBean msg) {
         this.msg = msg;
     }
-
+    
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable("msg", msg);
     }
-
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -66,72 +65,81 @@ public class BrowserCommentFragment extends Fragment {
         }
         buildViewData();
     }
-
+    
     @Override
     public void onDetach() {
         super.onDetach();
         avatar.setImageDrawable(null);
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.browserweibomsgfragment_layout, container, false);
-
+        View view = inflater.inflate(R.layout.browserweibomsgfragment_layout,
+                container, false);
+        
         username = (TextView) view.findViewById(R.id.username);
         content = (TextView) view.findViewById(R.id.content);
         time = (TextView) view.findViewById(R.id.time);
         source = (TextView) view.findViewById(R.id.source);
-
+        
         avatar = (ImageView) view.findViewById(R.id.avatar);
-
-        view.findViewById(R.id.first).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
-                intent.putExtra("user", msg.getUser());
-                startActivity(intent);
-            }
-        });
-
+        
+        view.findViewById(R.id.first).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(),
+                                UserInfoActivity.class);
+                        intent.putExtra("token", GlobalContext.getInstance()
+                                .getSpecialToken());
+                        intent.putExtra("user", msg.getUser());
+                        startActivity(intent);
+                    }
+                });
+        
         return view;
     }
-
+    
     private void buildViewData() {
         if (msg.getUser() != null) {
             username.setText(msg.getUser().getScreen_name());
             String url = msg.getUser().getProfile_image_url();
-            Bitmap bitmap = GlobalContext.getInstance().getBitmapCache().get(url);
+            Bitmap bitmap = GlobalContext.getInstance().getBitmapCache()
+                    .get(url);
             if (bitmap != null) {
                 avatar.setImageBitmap(bitmap);
-            } else {
-
-//                ProfileAvatarReadWorker avatarTask = new ProfileAvatarReadWorker(avatar, FileLocationMethod.avatar_small);
-//                avatarTask.execute(url);
+            }
+            else {
+                
+                // ProfileAvatarReadWorker avatarTask = new
+                // ProfileAvatarReadWorker(avatar,
+                // FileLocationMethod.avatar_small);
+                // avatarTask.execute(url);
             }
         }
         content.setText(msg.getText());
         TimeLineUtility.addLinks(content);
-
+        
         time.setText(msg.getListviewItemShowTime());
-
+        
         if (!TextUtils.isEmpty(msg.getSource())) {
             source.setText(Html.fromHtml(msg.getSource()).toString());
         }
-
+        
         buildShareActionMenu();
     }
-
+    
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.actionbar_menu_browserweibocommentactivity, menu);
+        inflater.inflate(R.menu.actionbar_menu_browserweibocommentactivity,
+                menu);
         MenuItem item = menu.findItem(R.id.menu_share);
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         buildShareActionMenu();
         super.onCreateOptionsMenu(menu, inflater);
     }
-
+    
     private void buildShareActionMenu() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
@@ -143,14 +151,16 @@ public class BrowserCommentFragment extends Fragment {
             }
         }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_comment:
-                intent = new Intent(getActivity(), WriteReplyToCommentActivity.class);
-                intent.putExtra("token", GlobalContext.getInstance().getSpecialToken());
+                intent = new Intent(getActivity(),
+                        WriteReplyToCommentActivity.class);
+                intent.putExtra("token", GlobalContext.getInstance()
+                        .getSpecialToken());
                 intent.putExtra("msg", msg);
                 getActivity().startActivity(intent);
                 break;
@@ -160,8 +170,10 @@ public class BrowserCommentFragment extends Fragment {
             case R.id.menu_copy:
                 ClipboardManager cm = (ClipboardManager) getActivity()
                         .getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content.getText().toString()));
-                Toast.makeText(getActivity(), getString(R.string.copy_successfully),
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", content
+                        .getText().toString()));
+                Toast.makeText(getActivity(),
+                        getString(R.string.copy_successfully),
                         Toast.LENGTH_SHORT).show();
                 break;
             default:

@@ -11,7 +11,7 @@ import android.support.v4.app.DialogFragment;
  * User: qii
  */
 public class QuickSendProgressFragment extends DialogFragment {
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ProgressDialog dialog = new ProgressDialog(getActivity());

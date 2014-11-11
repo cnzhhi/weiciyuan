@@ -1,5 +1,8 @@
 package org.qii.weiciyuan.ui.loader;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.qii.weiciyuan.bean.MessageBean;
 import org.qii.weiciyuan.bean.MessageListBean;
 import org.qii.weiciyuan.dao.maintimeline.BilateralTimeLineDao;
@@ -13,27 +16,24 @@ import org.qii.weiciyuan.ui.maintimeline.FriendsTimeLineFragment;
 import android.content.Context;
 import android.text.TextUtils;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
- * User: qii
- * Date: 13-4-18
+ * User: qii Date: 13-4-18
  */
-public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageListBean> {
-
+public class FriendsMsgLoader extends
+        AbstractAsyncNetRequestTaskLoader<MessageListBean> {
+    
     private static Lock lock = new ReentrantLock();
-
+    
     private String token;
     private String sinceId;
     private String maxId;
     private String accountId;
     private String currentGroupId;
-
-    private final int MAX_RETRY_COUNT = 6;  //1*50+6*49=344 new messages count
-
-    public FriendsMsgLoader(Context context, String accountId, String token, String groupId,
-            String sinceId, String maxId) {
+    
+    private final int MAX_RETRY_COUNT = 6;  // 1*50+6*49=344 new messages count
+    
+    public FriendsMsgLoader(Context context, String accountId, String token,
+            String groupId, String sinceId, String maxId) {
         super(context);
         this.token = token;
         this.sinceId = sinceId;
@@ -41,62 +41,67 @@ public class FriendsMsgLoader extends AbstractAsyncNetRequestTaskLoader<MessageL
         this.accountId = accountId;
         this.currentGroupId = groupId;
     }
-
+    
     public MessageListBean loadData() throws WeiboException {
         MessageListBean result = null;
         MessageListBean tmp = get(token, currentGroupId, sinceId, maxId);
         result = tmp;
-        if (isLoadNewData() && Utility.isWifi(getContext()) && SettingUtility
-                .isWifiUnlimitedMsgCount()) {
+        if (isLoadNewData() && Utility.isWifi(getContext())
+                && SettingUtility.isWifiUnlimitedMsgCount()) {
             int retryCount = 0;
-            while (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount())
-                    && retryCount < MAX_RETRY_COUNT) {
-                String tmpMaxId = tmp.getItemList().get(tmp.getItemList().size() - 1).getId();
+            while (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility
+                    .getMsgCount()) && retryCount < MAX_RETRY_COUNT) {
+                String tmpMaxId = tmp.getItemList()
+                        .get(tmp.getItemList().size() - 1).getId();
                 tmp = get(token, currentGroupId, sinceId, tmpMaxId);
                 result.addOldData(tmp);
                 retryCount++;
             }
-            if (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility.getMsgCount())) {
+            if (tmp.getReceivedCount() >= Integer.valueOf(SettingUtility
+                    .getMsgCount())) {
                 MessageBean middleUnreadItem = new MessageBean();
-                middleUnreadItem.setId(String.valueOf(System.currentTimeMillis()));
+                middleUnreadItem.setId(String.valueOf(System
+                        .currentTimeMillis()));
                 middleUnreadItem.setMiddleUnreadItem(true);
                 result.getItemList().add(middleUnreadItem);
             }
-        } else {
+        }
+        else {
             return result;
         }
-
+        
         return result;
     }
-
+    
     private boolean isLoadNewData() {
         return !TextUtils.isEmpty(sinceId) && TextUtils.isEmpty(maxId);
     }
-
-    private MessageListBean get(String token, String groupId, String sinceId, String maxId)
-            throws WeiboException {
+    
+    private MessageListBean get(String token, String groupId, String sinceId,
+            String maxId) throws WeiboException {
         MainFriendsTimeLineDao dao;
         if (currentGroupId.equals(FriendsTimeLineFragment.BILATERAL_GROUP_ID)) {
             dao = new BilateralTimeLineDao(token);
-        } else if (currentGroupId.equals(FriendsTimeLineFragment.ALL_GROUP_ID)) {
+        }
+        else if (currentGroupId.equals(FriendsTimeLineFragment.ALL_GROUP_ID)) {
             dao = new MainFriendsTimeLineDao(token);
-        } else {
+        }
+        else {
             dao = new FriendGroupTimeLineDao(token, currentGroupId);
         }
-
+        
         dao.setSince_id(sinceId);
         dao.setMax_id(maxId);
         MessageListBean result = null;
-
+        
         lock.lock();
-
+        
         try {
             result = dao.getGSONMsgList();
-        } finally {
+        }
+        finally {
             lock.unlock();
         }
         return result;
     }
 }
-
-

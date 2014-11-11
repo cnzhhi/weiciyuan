@@ -9,14 +9,13 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 
 /**
- * User: qii
- * Date: 13-12-4
+ * User: qii Date: 13-12-4
  */
 public class CommonProgressDialogFragment extends DialogFragment {
-
+    
     public CommonProgressDialogFragment() {
     }
-
+    
     public static CommonProgressDialogFragment newInstance(String content) {
         CommonProgressDialogFragment fragment = new CommonProgressDialogFragment();
         Bundle bundle = new Bundle();
@@ -24,14 +23,14 @@ public class CommonProgressDialogFragment extends DialogFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
-
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ProgressDialog dialog = new ProgressDialog(getActivity());
         dialog.setMessage(getArguments().getString("content"));
         return dialog;
     }
-
+    
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
@@ -40,11 +39,12 @@ public class CommonProgressDialogFragment extends DialogFragment {
             activity.finish();
         }
     }
-
+    
     public void show(FragmentManager manager, String tag) {
         try {
             super.show(manager, tag);
-        } catch (IllegalStateException ignored) {
+        }
+        catch (IllegalStateException ignored) {
             ignored.printStackTrace();
         }
     }

@@ -4,22 +4,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * User: qii
- * Date: 13-3-4
- * 42+6=48
+ * User: qii Date: 13-3-4 42+6=48
  */
 public class SmileyMap {
-
+    
     public static final int GENERAL_EMOTION_POSITION = 0;
     public static final int EMOJI_EMOTION_POSITION = 2;
     public static final int HUAHUA_EMOTION_POSITION = 1;
-
+    
     private static SmileyMap instance = new SmileyMap();
     private Map<String, String> general = new LinkedHashMap<String, String>();
     private Map<String, String> huahua = new LinkedHashMap<String, String>();
-
+    
     private SmileyMap() {
-
+        
         /**
          * general emotion
          */
@@ -70,7 +68,7 @@ public class SmileyMap {
         general.put("[困]", "face059.png");
         general.put("[拜拜]", "face062.png");
         general.put("[疑问]", "face055.png");
-
+        
         general.put("[赞]", "face329.png");
         general.put("[心]", "hearta_org.png");
         general.put("[伤心]", "unheart.png");
@@ -87,12 +85,12 @@ public class SmileyMap {
         general.put("[咖啡]", "face74.png");
         general.put("[爱心传递]", "face221.png");
         general.put("[来]", "face277.png");
-
+        
         general.put("[熊猫]", "face002.png");
         general.put("[帅]", "face94.png");
         general.put("[不要]", "face274.png");
         general.put("[熊猫]", "face002.png");
-
+        
         /**
          * huahua emotion
          */
@@ -137,15 +135,15 @@ public class SmileyMap {
         huahua.put("[被电]", "lxh_beidian.png");
         huahua.put("[霹雳]", "lxh_pili.png");
     }
-
+    
     public static SmileyMap getInstance() {
         return instance;
     }
-
+    
     public Map<String, String> getGeneral() {
         return general;
     }
-
+    
     public Map<String, String> getHuahua() {
         return huahua;
     }

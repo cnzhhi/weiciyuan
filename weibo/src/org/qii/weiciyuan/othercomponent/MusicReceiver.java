@@ -10,11 +10,10 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 /**
- * User: qii
- * Date: 14-2-5
+ * User: qii Date: 14-2-5
  */
 public class MusicReceiver extends RecordOperationAppBroadcastReceiver {
-
+    
     @Override
     public void onReceive(Context context, Intent intent) {
         String artist = intent.getStringExtra("artist");

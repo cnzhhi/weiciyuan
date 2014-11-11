@@ -15,35 +15,36 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 /**
- * User: qii
- * Date: 13-9-4
+ * User: qii Date: 13-9-4
  */
-public class MultiPicturesChildImageView extends PerformanceImageView
-        implements IWeiciyuanDrawable {
-
+public class MultiPicturesChildImageView extends PerformanceImageView implements
+        IWeiciyuanDrawable {
+    
     private Paint paint = new Paint();
     private boolean pressed = false;
     private boolean showGif = false;
     private Bitmap gif;
-
+    
     public MultiPicturesChildImageView(Context context) {
         this(context, null);
     }
-
+    
     public MultiPicturesChildImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
-    public MultiPicturesChildImageView(Context context, AttributeSet attrs, int defStyle) {
+    
+    public MultiPicturesChildImageView(Context context, AttributeSet attrs,
+            int defStyle) {
         super(context, attrs, defStyle);
         init(context);
     }
-
+    
     private void init(Context context) {
-        gif = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_gif_small);
+        gif = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_play_gif_small);
         paint.setAntiAlias(true);
     }
-
+    
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -58,10 +59,10 @@ public class MultiPicturesChildImageView extends PerformanceImageView
             canvas.drawColor(getResources().getColor(R.color.transparent_cover));
         }
     }
-
+    
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 pressed = true;
@@ -75,22 +76,22 @@ public class MultiPicturesChildImageView extends PerformanceImageView
         }
         return super.onTouchEvent(event);
     }
-
+    
     @Override
     public ImageView getImageView() {
         return this;
     }
-
+    
     @Override
     public void setProgress(int value, int max) {
-
+        
     }
-
+    
     @Override
     public ProgressBar getProgressBar() {
         return null;
     }
-
+    
     @Override
     public void setGifFlag(boolean value) {
         if (showGif != value) {
@@ -98,14 +99,14 @@ public class MultiPicturesChildImageView extends PerformanceImageView
             invalidate();
         }
     }
-
+    
     @Override
     public void checkVerified(UserBean user) {
-
+        
     }
-
+    
     @Override
     public void setPressesStateVisibility(boolean value) {
-
+        
     }
 }

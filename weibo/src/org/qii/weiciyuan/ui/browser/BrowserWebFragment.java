@@ -1,5 +1,7 @@
 package org.qii.weiciyuan.ui.browser;
 
+import java.lang.ref.WeakReference;
+
 import org.qii.weiciyuan.R;
 import org.qii.weiciyuan.dao.shorturl.Mid2IdDao;
 import org.qii.weiciyuan.support.error.WeiboException;
@@ -42,54 +44,52 @@ import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
-
 /**
- * User: qii
- * Date: 13-2-19
+ * User: qii Date: 13-2-19
  */
 public class BrowserWebFragment extends Fragment {
-
+    
     private WebView mWebView;
     private ProgressBar mProgressBar;
-
+    
     private boolean mIsWebViewAvailable;
-
+    
     private String mUrl = null;
-
+    
     private ShareActionProvider mShareActionProvider;
     private MenuItem refreshItem;
-
+    
     public BrowserWebFragment() {
         super();
     }
-
+    
     public BrowserWebFragment(String url) {
         super();
         mUrl = url;
     }
-
+    
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("mUrl", mUrl);
     }
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
         /**
-         *some devices for example Nexus 7 4.2.2 version will receive website favicon, but some
-         * devices may cant, Galaxy Nexus 4.2.2 version
+         * some devices for example Nexus 7 4.2.2 version will receive website
+         * favicon, but some devices may cant, Galaxy Nexus 4.2.2 version
          */
         String path = FileManager.getWebViewFaviconDirPath();
         if (!TextUtils.isEmpty(path)) {
-            WebIconDatabase.getInstance().open(FileManager.getWebViewFaviconDirPath());
+            WebIconDatabase.getInstance().open(
+                    FileManager.getWebViewFaviconDirPath());
         }
     }
-
+    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -97,18 +97,19 @@ public class BrowserWebFragment extends Fragment {
             mUrl = savedInstanceState.getString("mUrl");
         }
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.browserwebfragment_layout, container, false);
+        View view = inflater.inflate(R.layout.browserwebfragment_layout,
+                container, false);
         if (mWebView != null) {
             mWebView.destroy();
         }
         mWebView = (WebView) view.findViewById(R.id.webView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressbar);
         mWebView.setOnKeyListener(new View.OnKeyListener() {
-
+            
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
@@ -127,34 +128,35 @@ public class BrowserWebFragment extends Fragment {
         settings.setDisplayZoomControls(false);
         return view;
     }
-
+    
     public void loadUrl(String url) {
         if (mIsWebViewAvailable) {
             getWebView().loadUrl(mUrl = url);
-        } else {
+        }
+        else {
             Log.w("ImprovedWebViewFragment",
                     "WebView cannot be found. Check the view and fragment have been loaded.");
         }
     }
-
+    
     @Override
     public void onPause() {
         super.onPause();
         mWebView.onPause();
     }
-
+    
     @Override
     public void onResume() {
         mWebView.onResume();
         super.onResume();
     }
-
+    
     @Override
     public void onDestroyView() {
         mIsWebViewAvailable = false;
         super.onDestroyView();
     }
-
+    
     @Override
     public void onDestroy() {
         if (mWebView != null) {
@@ -163,11 +165,11 @@ public class BrowserWebFragment extends Fragment {
         }
         super.onDestroy();
     }
-
+    
     public WebView getWebView() {
         return mIsWebViewAvailable ? mWebView : null;
     }
-
+    
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.actionbar_menu_browserwebfragment, menu);
@@ -175,23 +177,25 @@ public class BrowserWebFragment extends Fragment {
         mShareActionProvider = (ShareActionProvider) item.getActionProvider();
         refreshItem = menu.findItem(R.id.menu_refresh);
         super.onCreateOptionsMenu(menu, inflater);
-
+        
         if (Utility.isWeiboAccountDomainLink(mUrl)) {
             String result = Utility.getDomainFromWeiboAccountLink(mUrl);
             Intent intent = new Intent(getActivity(), UserInfoActivity.class);
             intent.putExtra("domain", result);
             getActivity().startActivity(intent);
             getActivity().finish();
-        } else if (Utility.isWeiboMid(mUrl)) {
+        }
+        else if (Utility.isWeiboMid(mUrl)) {
             String mid = Utility.getMidFromUrl(mUrl);
             RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(
                     BrowserWebFragment.this, mUrl, mid);
             task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
+        }
+        else {
             mWebView.loadUrl(mUrl);
         }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -208,8 +212,10 @@ public class BrowserWebFragment extends Fragment {
             case R.id.menu_copy:
                 ClipboardManager cm = (ClipboardManager) getActivity()
                         .getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo", buildShareCopyContent()));
-                Toast.makeText(getActivity(), getString(R.string.copy_successfully),
+                cm.setPrimaryClip(ClipData.newPlainText("sinaweibo",
+                        buildShareCopyContent()));
+                Toast.makeText(getActivity(),
+                        getString(R.string.copy_successfully),
                         Toast.LENGTH_SHORT).show();
                 break;
             case R.id.menu_share:
@@ -219,58 +225,64 @@ public class BrowserWebFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    
     private String buildShareCopyContent() {
         String title = mWebView.getTitle();
         String url = mWebView.getUrl();
         if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(url)) {
             return title + " " + url;
-        } else {
+        }
+        else {
             return mUrl;
         }
     }
-
+    
     private void startRefreshAnimation() {
         LayoutInflater inflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_action_view, null);
-        Animation rotation = AnimationUtils.loadAnimation(getActivity(), R.anim.refresh);
+        ImageView iv = (ImageView) inflater.inflate(
+                R.layout.refresh_action_view, null);
+        Animation rotation = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.refresh);
         iv.startAnimation(rotation);
         finishRefreshAnimation();
         refreshItem.setActionView(iv);
     }
-
+    
     private void finishRefreshAnimation() {
         if (refreshItem.getActionView() != null) {
             refreshItem.getActionView().clearAnimation();
             refreshItem.setActionView(null);
         }
     }
-
+    
     private class InnerWebViewClient extends WebViewClient {
-
+        
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (Utility.isWeiboAccountDomainLink(url)) {
                 String result = Utility.getDomainFromWeiboAccountLink(url);
-                Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+                Intent intent = new Intent(getActivity(),
+                        UserInfoActivity.class);
                 intent.putExtra("domain", result);
                 getActivity().startActivity(intent);
                 getActivity().finish();
                 return true;
-            } else if (Utility.isWeiboMid(url)) {
-
+            }
+            else if (Utility.isWeiboMid(url)) {
+                
                 String mid = Utility.getMidFromUrl(url);
                 RedirectLinkToWeiboIdTask task = new RedirectLinkToWeiboIdTask(
                         BrowserWebFragment.this, url, mid);
                 task.executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
                 return true;
-            } else {
+            }
+            else {
                 view.loadUrl(url);
                 return true;
             }
         }
-
+        
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
@@ -279,7 +291,7 @@ public class BrowserWebFragment extends Fragment {
             }
             startRefreshAnimation();
         }
-
+        
         @Override
         public void onPageFinished(WebView view, String url) {
             if (getActivity() == null) {
@@ -295,9 +307,9 @@ public class BrowserWebFragment extends Fragment {
             finishRefreshAnimation();
         }
     }
-
+    
     private class InnerWebChromeClient extends WebChromeClient {
-
+        
         @Override
         public void onReceivedTitle(WebView view, String sTitle) {
             super.onReceivedTitle(view, sTitle);
@@ -314,17 +326,18 @@ public class BrowserWebFragment extends Fragment {
                 }
             }
         }
-
-        //website icon is too small
+        
+        // website icon is too small
         @Override
         public void onReceivedIcon(WebView view, Bitmap icon) {
             super.onReceivedIcon(view, icon);
             if (getActivity() == null) {
                 return;
             }
-//            getActivity().getActionBar().setIcon(new BitmapDrawable(getActivity().getResources(), icon));
+            // getActivity().getActionBar().setIcon(new
+            // BitmapDrawable(getActivity().getResources(), icon));
         }
-
+        
         public void onProgressChanged(WebView view, int progress) {
             if (getActivity() == null) {
                 return;
@@ -338,74 +351,83 @@ public class BrowserWebFragment extends Fragment {
             }
         }
     }
-
-    private static class RedirectLinkToWeiboIdTask extends MyAsyncTask<Void, Void, String> {
-
+    
+    private static class RedirectLinkToWeiboIdTask extends
+            MyAsyncTask<Void, Void, String> {
+        
         private String mid;
         private String oriUrl;
         private WeakReference<BrowserWebFragment> webFragmentWeakReference;
         private CommonProgressDialogFragment commonProgressDialogFragment;
         private String progressStr;
-
-        public RedirectLinkToWeiboIdTask(BrowserWebFragment webFragment, String oriUrl,
-                String mid) {
+        
+        public RedirectLinkToWeiboIdTask(BrowserWebFragment webFragment,
+                String oriUrl, String mid) {
             this.oriUrl = oriUrl;
             this.mid = mid;
-            this.progressStr = webFragment.getString(R.string.converting_weibo_link);
-            this.webFragmentWeakReference = new WeakReference<BrowserWebFragment>(webFragment);
+            this.progressStr = webFragment
+                    .getString(R.string.converting_weibo_link);
+            this.webFragmentWeakReference = new WeakReference<BrowserWebFragment>(
+                    webFragment);
         }
-
+        
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             BrowserWebFragment webFragment = webFragmentWeakReference.get();
-
+            
             if (webFragment == null) {
                 return;
             }
-
+            
             Activity activity = webFragment.getActivity();
-
+            
             if (activity == null) {
                 return;
             }
-
-            commonProgressDialogFragment = CommonProgressDialogFragment.newInstance(progressStr);
-            commonProgressDialogFragment
-                    .show(((FragmentActivity) activity).getSupportFragmentManager(), "dialog");
+            
+            commonProgressDialogFragment = CommonProgressDialogFragment
+                    .newInstance(progressStr);
+            commonProgressDialogFragment.show(
+                    ((FragmentActivity) activity).getSupportFragmentManager(),
+                    "dialog");
         }
-
+        
         @Override
         protected String doInBackground(Void... params) {
             try {
-                return new Mid2IdDao(GlobalContext.getInstance().getSpecialToken(), mid).getId();
-            } catch (WeiboException e) {
+                return new Mid2IdDao(GlobalContext.getInstance()
+                        .getSpecialToken(), mid).getId();
+            }
+            catch (WeiboException e) {
                 return "0";
             }
         }
-
+        
         @Override
         protected void onPostExecute(String id) {
             super.onPostExecute(id);
             BrowserWebFragment webFragment = webFragmentWeakReference.get();
-
+            
             if (webFragment == null) {
                 return;
             }
-
+            
             Activity activity = webFragment.getActivity();
             if (activity == null) {
                 return;
             }
-
+            
             commonProgressDialogFragment.dismissAllowingStateLoss();
-
+            
             if (Long.valueOf(id) > 0L) {
                 webFragment.startActivity(BrowserWeiboMsgActivity.newIntent(id,
                         GlobalContext.getInstance().getSpecialToken()));
                 activity.finish();
-            } else {
-                Toast.makeText(GlobalContext.getInstance(), R.string.cant_not_convert_to_weibo_id,
+            }
+            else {
+                Toast.makeText(GlobalContext.getInstance(),
+                        R.string.cant_not_convert_to_weibo_id,
                         Toast.LENGTH_SHORT).show();
                 webFragment.mWebView.loadUrl(oriUrl);
             }

@@ -3,9 +3,9 @@ package pl.droidsonroids.gif;
 import java.util.Locale;
 
 /**
- * Encapsulation of decoding errors ocurring in native code.
- * Three digit codes are equal to GIFLib error codes.
- *
+ * Encapsulation of decoding errors ocurring in native code. Three digit codes
+ * are equal to GIFLib error codes.
+ * 
  * @author koral--
  */
 public enum GifError {
@@ -62,8 +62,8 @@ public enum GifError {
      */
     IMAGE_DEFECT(112, "Image is defective, decoding aborted"),
     /**
-     * Image EOF detected before image complete.
-     * EOF means GIF terminator, NOT end of input source.
+     * Image EOF detected before image complete. EOF means GIF terminator, NOT
+     * end of input source.
      */
     EOF_TOO_SOON(113, "Image EOF detected before image complete"),
     /**
@@ -86,19 +86,19 @@ public enum GifError {
      * Unknown error, should never appear
      */
     UNKNOWN(-1, "Unknown error");
-
+    
     /**
      * Human readable descpription of the error
      */
     public final String description;
-
+    
     private int errorCode;
-
+    
     private GifError(int code, String description) {
         errorCode = code;
         this.description = description;
     }
-
+    
     static GifError fromCode(int code) {
         for (GifError err : GifError.values()) {
             if (err.errorCode == code) {
@@ -109,15 +109,16 @@ public enum GifError {
         unk.errorCode = code;
         return unk;
     }
-
+    
     /**
      * @return error code
      */
     public int getErrorCode() {
         return errorCode;
     }
-
+    
     String getFormattedDescription() {
-        return String.format(Locale.US, "GifError %d: %s", errorCode, description);
+        return String.format(Locale.US, "GifError %d: %s", errorCode,
+                description);
     }
 }
