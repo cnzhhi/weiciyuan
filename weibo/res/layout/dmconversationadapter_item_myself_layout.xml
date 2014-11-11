@@ -5,7 +5,7 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp">
 
-    <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
+    <me.ivps.android.myweibo.support.lib.TimeLineAvatarImageView
         android:id="@+id/avatar"
         android:layout_width="@dimen/timeline_avatar_width"
         android:layout_height="@dimen/timeline_avatar_height"

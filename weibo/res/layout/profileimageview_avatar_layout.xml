@@ -4,7 +4,7 @@
        android:addStatesFromChildren="true"
     >
 
-    <org.qii.weiciyuan.support.lib.PerformanceImageView
+    <me.ivps.android.myweibo.support.lib.PerformanceImageView
         android:id="@+id/imageview"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <org.qii.weiciyuan.support.lib.PerformanceImageView
+    <me.ivps.android.myweibo.support.lib.PerformanceImageView
         android:id="@+id/imageview_v"
         android:layout_gravity="right|bottom"
         android:layout_width="wrap_content"

@@ -1,0 +1,106 @@
+package me.ivps.android.myweibo.dao.timeline;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import me.ivps.android.myweibo.bean.CommentBean;
+import me.ivps.android.myweibo.bean.CommentListBean;
+import me.ivps.android.myweibo.dao.URLHelper;
+import me.ivps.android.myweibo.support.debug.AppLogger;
+import me.ivps.android.myweibo.support.error.WeiboException;
+import me.ivps.android.myweibo.support.http.HttpMethod;
+import me.ivps.android.myweibo.support.http.HttpUtility;
+import me.ivps.android.myweibo.support.settinghelper.SettingUtility;
+import me.ivps.android.myweibo.support.utils.TimeUtility;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+/**
+ * User: Jiang Qi Date: 12-8-13
+ */
+public class CommentsTimeLineByIdDao {
+    
+    public CommentListBean getGSONMsgList() throws WeiboException {
+        
+        String url = URLHelper.COMMENTS_TIMELINE_BY_MSGID;
+        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("access_token", access_token);
+        map.put("id", id);
+        map.put("since_id", since_id);
+        map.put("max_id", max_id);
+        map.put("count", count);
+        map.put("page", page);
+        map.put("filter_by_author", filter_by_author);
+        
+        String jsonData = HttpUtility.getInstance().executeNormalTask(
+                HttpMethod.Get, url, map);
+        
+        Gson gson = new Gson();
+        
+        CommentListBean value = null;
+        try {
+            value = gson.fromJson(jsonData, CommentListBean.class);
+        }
+        catch (JsonSyntaxException e) {
+            
+            AppLogger.e(e.getMessage());
+        }
+        
+        if (value != null && value.getItemList().size() > 0) {
+            List<CommentBean> msgList = value.getItemList();
+            Iterator<CommentBean> iterator = msgList.iterator();
+            while (iterator.hasNext()) {
+                
+                CommentBean msg = iterator.next();
+                if (msg.getUser() == null) {
+                    iterator.remove();
+                }
+                else {
+                    msg.getListViewSpannableString();
+                    TimeUtility.dealMills(msg);
+                }
+            }
+        }
+        
+        return value;
+    }
+    
+    public CommentsTimeLineByIdDao(String token, String id) {
+        
+        this.access_token = token;
+        this.id = id;
+        this.count = SettingUtility.getMsgCount();
+    }
+    
+    public void setSince_id(String since_id) {
+        this.since_id = since_id;
+    }
+    
+    public void setMax_id(String max_id) {
+        this.max_id = max_id;
+    }
+    
+    public void setCount(String count) {
+        this.count = count;
+    }
+    
+    public void setPage(String page) {
+        this.page = page;
+    }
+    
+    public void setFilter_by_author(String filter_by_author) {
+        this.filter_by_author = filter_by_author;
+    }
+    
+    private String access_token;
+    private String id;
+    private String since_id;
+    private String max_id;
+    private String count;
+    private String page;
+    private String filter_by_author;
+}

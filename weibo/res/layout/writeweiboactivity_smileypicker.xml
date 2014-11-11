@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
 
-    <org.qii.weiciyuan.support.gallery.ViewPagerFixed
+    <me.ivps.android.myweibo.support.gallery.ViewPagerFixed
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

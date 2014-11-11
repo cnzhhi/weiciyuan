@@ -13,7 +13,7 @@
             android:padding="10dp"
             android:background="?listview_card_bg">
 
-        <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
+        <me.ivps.android.myweibo.support.lib.TimeLineAvatarImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/timeline_avatar_width"
                 android:layout_height="@dimen/timeline_avatar_height"
@@ -38,7 +38,7 @@
                 android:textStyle="bold"/>
 
 
-        <org.qii.weiciyuan.support.lib.TimeTextView
+        <me.ivps.android.myweibo.support.lib.TimeTextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

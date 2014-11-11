@@ -5,7 +5,7 @@
              android:padding="1dip">
 
 
-    <org.qii.weiciyuan.support.lib.CircleProgressView
+    <me.ivps.android.myweibo.support.lib.CircleProgressView
             android:id="@+id/loading"
             android:layout_width="100dp"
             android:layout_height="100dp"

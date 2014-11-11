@@ -15,7 +15,7 @@
  *******************************************************************************/
 package uk.co.senab.photoview;
 
-import org.qii.weiciyuan.support.lib.ClipImageView;
+import me.ivps.android.myweibo.support.lib.ClipImageView;
 
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;

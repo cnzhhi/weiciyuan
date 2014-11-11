@@ -6,7 +6,7 @@
        android:layout_width="fill_parent"
        android:layout_height="fill_parent">
 
-    <org.qii.weiciyuan.support.lib.PerformanceImageView
+    <me.ivps.android.myweibo.support.lib.PerformanceImageView
         android:id="@+id/imageview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"/>

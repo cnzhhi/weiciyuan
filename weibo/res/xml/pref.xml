@@ -7,13 +7,13 @@
         <Preference android:title="@string/pref_appearance_title">
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.AppearanceActivity"/>
+                android:targetClass="me.ivps.android.myweibo.ui.preference.AppearanceActivity"/>
         </Preference>
 
         <Preference android:title="@string/pref_read_title">
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.ReadActivity"/>
+                android:targetClass="me.ivps.android.myweibo.ui.preference.ReadActivity"/>
         </Preference>
 
 
@@ -30,21 +30,21 @@
             android:summary="@string/notification_summary">
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.NotificationActivity"/>
+                android:targetClass="me.ivps.android.myweibo.ui.preference.NotificationActivity"/>
         </Preference>
         <Preference
             android:title="@string/draft"
             android:key="draft">
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.DraftActivity"/>
+                android:targetClass="me.ivps.android.myweibo.ui.preference.DraftActivity"/>
         </Preference>
         <Preference
             android:title="@string/pref_data_control_title"
             android:key="data_control">
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.ControlActivity"/>
+                android:targetClass="me.ivps.android.myweibo.ui.preference.ControlActivity"/>
         </Preference>
 
 
@@ -53,7 +53,7 @@
             android:key="filter">
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.FilterActivity"
+                android:targetClass="me.ivps.android.myweibo.ui.preference.FilterActivity"
                 />
         </Preference>
         <Preference
@@ -61,7 +61,7 @@
             >
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.PerformanceActivity"
+                android:targetClass="me.ivps.android.myweibo.ui.preference.PerformanceActivity"
                 />
         </Preference>
         <Preference
@@ -69,7 +69,7 @@
             >
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.OtherActivity"
+                android:targetClass="me.ivps.android.myweibo.ui.preference.OtherActivity"
                 />
         </Preference>
     </PreferenceCategory>
@@ -78,7 +78,7 @@
         <Preference android:title="@string/pref_about_title">
             <intent
                 android:targetPackage="@string/applicationId"
-                android:targetClass="org.qii.weiciyuan.ui.preference.AboutActivity"/>
+                android:targetClass="me.ivps.android.myweibo.ui.preference.AboutActivity"/>
         </Preference>
     </PreferenceCategory>
 

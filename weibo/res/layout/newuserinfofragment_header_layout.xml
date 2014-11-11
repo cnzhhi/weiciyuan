@@ -20,14 +20,14 @@
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"/>
 
-            <org.qii.weiciyuan.support.lib.BlurImageView
+            <me.ivps.android.myweibo.support.lib.BlurImageView
                     android:id="@+id/blur"
                     android:background="@color/transparent"
                     android:scaleType="centerCrop"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"/>
 
-            <org.qii.weiciyuan.support.lib.LinearGradientCoverImageView
+            <me.ivps.android.myweibo.support.lib.LinearGradientCoverImageView
                     android:src="@color/transparent"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"/>

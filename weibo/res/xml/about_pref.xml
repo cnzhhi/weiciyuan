@@ -11,7 +11,7 @@
                 >
             <intent
                     android:action="android.intent.action.VIEW"
-                    android:data="org.qii.weiciyuan://@四次元App"/>
+                    android:data="me.ivps.android.myweibo://@四次元App"/>
         </Preference>
 
         <Preference
@@ -43,7 +43,7 @@
         <Preference android:title="@string/pref_open_source_license_title">
             <intent
                 android:targetPackage="@string/applicationId"
-                    android:targetClass="org.qii.weiciyuan.ui.preference.LicenseActivity"/>
+                    android:targetClass="me.ivps.android.myweibo.ui.preference.LicenseActivity"/>
         </Preference>
 
     </PreferenceCategory>
@@ -64,7 +64,7 @@
                 >
             <intent
                     android:action="android.intent.action.VIEW"
-                    android:data="market://details?id=org.qii.weiciyuan"/>
+                    android:data="market://details?id=me.ivps.android.myweibo"/>
         </Preference>
 
 

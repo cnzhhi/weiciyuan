@@ -13,7 +13,7 @@
             android:padding="10dp"
             android:background="?listview_card_bg">
 
-        <org.qii.weiciyuan.support.lib.TimeLineAvatarImageView
+        <me.ivps.android.myweibo.support.lib.TimeLineAvatarImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/timeline_avatar_width"
                 android:layout_height="@dimen/timeline_avatar_height"
@@ -82,7 +82,7 @@
                 android:textStyle="bold"/>
 
 
-        <org.qii.weiciyuan.support.lib.TimeTextView
+        <me.ivps.android.myweibo.support.lib.TimeTextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                 />
 
 
-        <org.qii.weiciyuan.support.lib.TimeLineImageView
+        <me.ivps.android.myweibo.support.lib.TimeLineImageView
                 android:id="@+id/content_pic"
                 android:layout_below="@id/content"
                 android:layout_width="@dimen/timeline_pic_thumbnail_width"
@@ -137,31 +137,31 @@
                 android:useDefaultMargins="false"
                 android:clickable="false">
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
         </GridLayout>
@@ -195,7 +195,7 @@
                 />
 
 
-        <org.qii.weiciyuan.support.lib.TimeLineImageView
+        <me.ivps.android.myweibo.support.lib.TimeLineImageView
                 android:layout_marginTop="5dp"
                 android:layout_below="@id/repost_content"
                 android:layout_marginLeft="14dp"
@@ -223,31 +223,31 @@
                 android:useDefaultMargins="false"
                 android:clickable="false">
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
-            <org.qii.weiciyuan.support.asyncdrawable.MultiPicturesChildImageView
+            <me.ivps.android.myweibo.support.asyncdrawable.MultiPicturesChildImageView
                     style="@style/listViewMultiImageView"/>
 
         </GridLayout>

@@ -21,7 +21,7 @@
            use overScrollMode to disable blue boundaries at the top and the bottom of listview
            because it is pull to refresh listview-->
 
-        <org.qii.weiciyuan.support.lib.pulltorefresh.PullToRefreshListView
+        <me.ivps.android.myweibo.support.lib.pulltorefresh.PullToRefreshListView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:fastScrollEnabled="false"
